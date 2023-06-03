@@ -1,0 +1,86 @@
+#version: '3'
+#services:
+#  ogityfuj:
+#    build:
+#      dockerfile: Dockerfile
+#    networks:
+#      - jesttestbest
+#    ports:
+#      - 3000:3000
+##    environment:
+##      - TYPEORM_HOST=mariadb
+#  postgres:
+#    image: postgres:15.1
+#    networks:
+#      - jesttestbest
+#    volumes:
+#      - /data/postgres:/data/postgres
+#    env_file:
+#      - docker.env
+##volumes:
+##  mariadb_data:
+##    driver: local
+#networks:
+#  jesttestbest:
+#    driver: bridge
+
+# --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+#version: '3'
+#
+#services:
+#  api:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - 3000:3000
+#    depends_on:
+#      - postgres
+#    links:
+#      - postgres:postgres
+#    volumes:
+#      - .:/usr/src/app
+#      - /usr/src/app/node_modules
+#
+#  postgres:
+#    image: postgres:alpine
+#    restart: always
+#    ports:
+#      - 5432:5432
+#    environment:
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=crudjs
+#      - POSTGRES_PORT=5432
+
+
+# --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+version: '3.5'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    container_name: postgres
+    volumes:
+      - ./pgdata:/var/lib/postgresql/volume
+    ports:
+      - '5432:5432'
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nest-docker-postgres
+    environment:
+      - PORT=${PORT}
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+    volumes:
+      - ./src:/app/src
