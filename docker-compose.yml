@@ -62,12 +62,11 @@ services:
   db:
     image: postgres
     restart: always
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    container_name: postgres
+    container_name: templater-db
+    env_file:
+      - docker.env
     volumes:
-      - ./pgdata:/var/lib/postgresql/volume
+      - /data/postgres:/data/postgres
     ports:
       - '5432:5432'
 
@@ -75,12 +74,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: nest-docker-postgres
-    environment:
-      - PORT=${PORT}
-    ports:
-      - '3000:3000'
+    container_name: templater-nestjs-app
     depends_on:
       - db
+    environment:
+      DATABASE_URL: postgres://user:password@postgres:5432/db
+      PORT: 3000
+    ports:
+      - '3000:3000'
     volumes:
       - ./src:/app/src
