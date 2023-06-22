@@ -6,10 +6,11 @@ import { Blog } from '../blog/blog.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
+      host: 'postgres',
       port: 5432,
       username: 'postgres',
-      password: 'crudjs',
+      password: 'postgres',
+      database: 'postgres',
       entities: [Blog],
       synchronize: true,
     }),
