@@ -8,4 +8,4 @@ export class TestController {
   async findAll(): Promise<string> {
     return new Promise((resolve) => resolve('Test text response'));
   }
-}
+}  

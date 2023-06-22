@@ -56,31 +56,85 @@
 
 # --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-version: '3.5'
+# version: '3.5'
 
+# services:
+#   dbase:
+#     image: postgres
+#     restart: always 
+#     environment:
+#       - POSTGRES_USER="postgres"
+#       - POSTGRES_USERNAME="postgres"
+#       - POSTGRES_PASSWORD="postgres"
+#       - POSTGRES_DATABASE="postgres"
+#       - DB_USERNAME="postgres"
+#       - DB_PASSWORD="postgres"
+#       - DB_DATABASE="postgres"
+#       - PGDATA="/var/lib/postgresql/data/some_name/"
+#     container_name: postgres
+#     volumes:
+# #      - postgres:/var/lib/postgresql/data
+#       # - ./pgdata:/var/lib/postgresql/data
+#       - ./pgdata:/var/lib/postgresql/data/some_name/
+#     ports:
+#       - '5432:5432'
+#     networks:
+#       - templater
+
+#   app:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     container_name: nest-docker-postgres
+#     ports:
+#       - '3000:3000'
+#     depends_on:
+#       - dbase
+#     volumes:
+#       - ./src:/app/src
+#     networks:
+#       - templater
+
+# networks:
+#   templater:
+#     driver: bridge
+
+# volumes:
+#   dbase:
+#     driver: local
+
+
+version: '3.8'
 services:
-  db:
-    image: postgres
-    restart: always
-    container_name: templater-db
-    env_file:
-      - docker.env
-    volumes:
-      - /data/postgres:/data/postgres
+  postgres:
+    image: postgres:13-alpine
     ports:
-      - '5432:5432'
+      - 5432:5432
+    container_name: nest-docker-postgres
+    env_file:
+      - .env
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - templater
 
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: templater-nestjs-app
-    depends_on:
-      - db
-    environment:
-      DATABASE_URL: postgres://user:password@postgres:5432/db
-      PORT: 3000
     ports:
       - '3000:3000'
+    container_name: nest-docker-app
+    depends_on:
+      - postgres
     volumes:
       - ./src:/app/src
+    networks:
+      - templater
+
+volumes:
+   postgres:
+      name: nest-init-docker-db
+
+networks:
+   templater:
