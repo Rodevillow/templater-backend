@@ -1,17 +1,15 @@
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
-import {
-  TypeOrmModuleAsyncOptions,
-  TypeOrmModuleOptions,
-} from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModuleAsyncOptions, TypeOrmModuleOptions } from '@nestjs/typeorm';
+
 config();
 const configService = new ConfigService();
 
 const entitiesFolder = ['src/modules/**/entities/*.ts'];
 const migrationsFolder = ['src/migrations/*.ts'];
 const seedsFolder = ['src/seeds/*.ts'];
-const isDevelopment = configService.get<string>('NODE_ENV') === 'development';
+const isDevelopment = configService.get<string>('NODE_ENV') !== 'production';
 
 export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
   imports: [ConfigModule],
@@ -21,13 +19,13 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
   ): Promise<TypeOrmModuleOptions> => {
     return {
       type: 'postgres',
-      host: confService.get('DB_HOST'),
-      port: confService.get('DB_PORT'),
-      username: confService.get('DB_USER'),
-      password: confService.get('DB_PASSWORD'),
-      database: confService.get('DB_NAME'),
+      host: confService.get<string>('POSTGRES_HOST'),
+      port: confService.get<number>('POSTGRES_PORT'),
+      database: confService.get<string>('POSTGRES_DB_NAME'),
+      username: confService.get<string>('POSTGRES_USERNAME'),
+      password: confService.get<string>('POSTGRES_PASSWORD'),
       autoLoadEntities: isDevelopment,
-      synchronize: configService.get<string>('NODE_ENV') === 'development',
+      synchronize: isDevelopment,
       logging: isDevelopment,
     };
   },
@@ -35,11 +33,11 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
 
 export const typeOrmConfig = new DataSource({
   type: 'postgres',
-  host: configService.get('DB_HOST'),
-  port: configService.get('DB_PORT'),
-  username: configService.get('DB_USER'),
-  password: configService.get('DB_PASSWORD'),
-  database: configService.get('DB_NAME'),
+  host: configService.get('POSTGRES_HOST'),
+  port: configService.get('POSTGRES_PORT'),
+  database: configService.get('POSTGRES_DB_NAME'),
+  username: configService.get('POSTGRES_USERNAME'),
+  password: configService.get('POSTGRES_PASSWORD'),
   entities: entitiesFolder,
   migrations: migrationsFolder,
   logging: isDevelopment,
@@ -47,11 +45,11 @@ export const typeOrmConfig = new DataSource({
 
 export const seedOrmConfig = new DataSource({
   type: 'postgres',
-  host: configService.get('DB_HOST'),
-  port: configService.get('DB_PORT'),
-  username: configService.get('DB_USER'),
-  password: configService.get('DB_PASSWORD'),
-  database: configService.get('DB_NAME'),
+  host: configService.get('POSTGRES_HOST'),
+  port: configService.get('POSTGRES_PORT'),
+  database: configService.get('POSTGRES_DB_NAME'),
+  username: configService.get('POSTGRES_USERNAME'),
+  password: configService.get('POSTGRES_PASSWORD'),
   entities: entitiesFolder,
   migrations: seedsFolder,
   logging: isDevelopment,
