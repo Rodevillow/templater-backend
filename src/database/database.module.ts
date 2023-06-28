@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
-import { typeOrmConfigJson } from '../config/typeOrm.config';
+import { typeOrmAsyncConfig } from '../config/typeOrm.config';
 
 @Module({
   imports: [
@@ -45,7 +45,7 @@ import { typeOrmConfigJson } from '../config/typeOrm.config';
           ),
       }),
     }),
-    TypeOrmModule.forRoot(typeOrmConfigJson),
+    TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
   ],
 })
 export class DatabaseModule {}
