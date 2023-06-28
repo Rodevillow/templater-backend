@@ -20,9 +20,9 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
     return {
       type: 'postgres',
       host: confService.get<string>('POSTGRES_HOST'),
-      port: confService.get<number>('POSTGRES_PORT'),
-      database: confService.get<string>('POSTGRES_DB_NAME'),
-      username: confService.get<string>('POSTGRES_USERNAME'),
+      port: +confService.get<number>('POSTGRES_PORT'),
+      database: confService.get<string>('POSTGRES_DB'),
+      username: confService.get<string>('POSTGRES_USER'),
       password: confService.get<string>('POSTGRES_PASSWORD'),
       autoLoadEntities: isDevelopment,
       synchronize: isDevelopment,
@@ -31,13 +31,22 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
   },
 };
 
+export const typeOrmConfigJson:any = {
+  type: 'postgres',
+  host: configService.get<string>('POSTGRES_HOST'),
+  port: +configService.get<number>('POSTGRES_PORT'),
+  database: configService.get<string>('POSTGRES_DB'),
+  username: configService.get<string>('POSTGRES_USER'),
+  password: configService.get<string>('POSTGRES_PASSWORD'),
+};
+
 export const typeOrmConfig = new DataSource({
   type: 'postgres',
-  host: configService.get('POSTGRES_HOST'),
-  port: configService.get('POSTGRES_PORT'),
-  database: configService.get('POSTGRES_DB_NAME'),
-  username: configService.get('POSTGRES_USERNAME'),
-  password: configService.get('POSTGRES_PASSWORD'),
+  host: configService.get<string>('POSTGRES_HOST'),
+  port: +configService.get<number>('POSTGRES_PORT'),
+  database: configService.get<string>('POSTGRES_DB'),
+  username: configService.get<string>('POSTGRES_USER'),
+  password: configService.get<string>('POSTGRES_PASSWORD'),
   entities: entitiesFolder,
   migrations: migrationsFolder,
   logging: isDevelopment,
@@ -45,11 +54,11 @@ export const typeOrmConfig = new DataSource({
 
 export const seedOrmConfig = new DataSource({
   type: 'postgres',
-  host: configService.get('POSTGRES_HOST'),
-  port: configService.get('POSTGRES_PORT'),
-  database: configService.get('POSTGRES_DB_NAME'),
-  username: configService.get('POSTGRES_USERNAME'),
-  password: configService.get('POSTGRES_PASSWORD'),
+  host: configService.get<string>('POSTGRES_HOST'),
+  port: +configService.get<number>('POSTGRES_PORT'),
+  database: configService.get<string>('POSTGRES_DB'),
+  username: configService.get<string>('POSTGRES_USER'),
+  password: configService.get<string>('POSTGRES_PASSWORD'),
   entities: entitiesFolder,
   migrations: seedsFolder,
   logging: isDevelopment,

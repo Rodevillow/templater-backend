@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
-import { typeOrmAsyncConfig } from '../config/typeOrm.config';
+import { typeOrmConfigJson } from '../config/typeOrm.config';
 
 @Module({
   imports: [
@@ -22,14 +22,14 @@ import { typeOrmAsyncConfig } from '../config/typeOrm.config';
               `PLEASE MAKE SURE THAT YOU DEFINE DB PORT AND IT IS NUMBER`,
             ),
           ),
-        POSTGRES_DB_NAME: Joi.string()
+        POSTGRES_DB: Joi.string()
           .required()
           .error(
             new Error(
               `PLEASE MAKE SURE THAT YOU DEFINE DB NAME AND IT IS STRING`,
             ),
           ),
-        POSTGRES_USERNAME: Joi.string()
+        POSTGRES_USER: Joi.string()
           .required()
           .error(
             new Error(
@@ -45,7 +45,7 @@ import { typeOrmAsyncConfig } from '../config/typeOrm.config';
           ),
       }),
     }),
-    TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
+    TypeOrmModule.forRoot(typeOrmConfigJson),
   ],
 })
 export class DatabaseModule {}
