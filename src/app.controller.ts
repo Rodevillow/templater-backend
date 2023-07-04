@@ -7,4 +7,4 @@ export class AppController {
     console.log('MAIN CONTROLLER /');
     return new Promise((resolve) => resolve('Test text response'));
   }
-}  
+}

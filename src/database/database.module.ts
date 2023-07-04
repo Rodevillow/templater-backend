@@ -8,6 +8,20 @@ import { typeOrmAsyncConfig } from '../config/typeOrm.config';
   imports: [
     ConfigModule.forRoot({
       validationSchema: Joi.object({
+        API_HOST: Joi.string()
+          .required()
+          .error(
+            new Error(
+              `PLEASE MAKE SURE THAT YOU DEFINE API HOST AND IT IS STRING`,
+            ),
+          ),
+        API_PORT: Joi.number()
+          .required()
+          .error(
+            new Error(
+              `PLEASE MAKE SURE THAT YOU DEFINE API PORT AND IT IS NUMBER`,
+            ),
+          ),
         POSTGRES_HOST: Joi.string()
           .required()
           .error(

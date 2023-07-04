@@ -4,8 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/entities/user.entity';
 import * as bcrypt from 'bcrypt';
-import { CreateUserDto } from '../users/dto/create-user.dto';
-import { ResponseModel } from '../../shared/models/response';
+import { UserResponse } from '../../shared/models/user.response';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +14,7 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  login(user: User): ResponseModel<Omit<User, 'password' | 'refreshToken'>> {
+  login(user: User): UserResponse {
     const payload = {
       userId: user.id,
       email: user.email,
@@ -24,17 +23,13 @@ export class AuthService {
     // exclude password and refreshtoken from response
     const { password, refreshToken, ...result } = user;
 
-    return new ResponseModel({
+    return {
       ...result,
       accessToken: this.jwtService.sign(payload, {
         expiresIn: '60s',
         secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET'),
       }),
-    });
-  }
-
-  async register(user: CreateUserDto): Promise<ResponseModel<User>> {
-    return new ResponseModel(await this.usersService.create(user));
+    };
   }
 
   getCookieWithJwtRefreshToken(userId: string) {
