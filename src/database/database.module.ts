@@ -2,12 +2,26 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
-import { typeOrmConfigJson } from '../config/typeOrm.config';
+import { typeOrmAsyncConfig } from '../config/typeOrm.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       validationSchema: Joi.object({
+        API_HOST: Joi.string()
+          .required()
+          .error(
+            new Error(
+              `PLEASE MAKE SURE THAT YOU DEFINE API HOST AND IT IS STRING`,
+            ),
+          ),
+        API_PORT: Joi.number()
+          .required()
+          .error(
+            new Error(
+              `PLEASE MAKE SURE THAT YOU DEFINE API PORT AND IT IS NUMBER`,
+            ),
+          ),
         POSTGRES_HOST: Joi.string()
           .required()
           .error(
@@ -43,9 +57,13 @@ import { typeOrmConfigJson } from '../config/typeOrm.config';
               `PLEASE MAKE SURE THAT YOU DEFINE DB PASSWORD AND IT IS STRING`,
             ),
           ),
+        JWT_ACCESS_TOKEN_SECRET: Joi.string().required(),
+        JWT_ACCESS_TOKEN_EXPIRATION_TIME: Joi.string().required(),
+        JWT_REFRESH_TOKEN_SECRET: Joi.string().required(),
+        JWT_REFRESH_TOKEN_EXPIRATION_TIME: Joi.string().required(),
       }),
     }),
-    TypeOrmModule.forRoot(typeOrmConfigJson),
+    TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
   ],
 })
 export class DatabaseModule {}

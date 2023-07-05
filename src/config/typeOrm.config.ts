@@ -1,7 +1,10 @@
 import { config } from 'dotenv';
 import { DataSource } from 'typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModuleAsyncOptions, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import {
+  TypeOrmModuleAsyncOptions,
+  TypeOrmModuleOptions,
+} from '@nestjs/typeorm';
 
 config();
 const configService = new ConfigService();
@@ -9,7 +12,7 @@ const configService = new ConfigService();
 const entitiesFolder = ['src/modules/**/entities/*.ts'];
 const migrationsFolder = ['src/migrations/*.ts'];
 const seedsFolder = ['src/seeds/*.ts'];
-const isDevelopment = configService.get<string>('NODE_ENV') !== 'production';
+const isDevelopment = configService.get<string>('NODE_ENV') !== 'prod';
 
 export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
   imports: [ConfigModule],
@@ -31,7 +34,7 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
   },
 };
 
-export const typeOrmConfigJson:any = {
+export const typeOrmConfigJson = {
   type: 'postgres',
   host: configService.get<string>('POSTGRES_HOST'),
   port: +configService.get<number>('POSTGRES_PORT'),
