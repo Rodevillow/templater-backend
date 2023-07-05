@@ -93,6 +93,10 @@ export class UsersService {
       .getOne();
   }
 
+  findOneById(id: string): Promise<User> {
+    return this.userRepository.findOneByOrFail({ id });
+  }
+
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }
