@@ -8,17 +8,11 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
-  @ApiProperty()
-  @IsString()
-  @MinLength(2)
-  @MaxLength(50)
-  firstName: string;
+  @ApiProperty({required: false})
+  firstName?: string;
 
-  @ApiProperty()
-  @IsString()
-  @MinLength(2)
-  @MaxLength(50)
-  lastName: string;
+  @ApiProperty({required: false})
+  lastName?: string;
 
   @ApiProperty()
   @IsString()
@@ -27,11 +21,10 @@ export class CreateUserDto {
   password: string;
 
   @ApiProperty({ required: false })
-  @IsString()
-  @IsOptional()
   avatar: string;
 
   @ApiProperty()
   @IsEmail()
+  @MaxLength(50)
   email: string;
 }
