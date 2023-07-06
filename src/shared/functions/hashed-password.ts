@@ -1,5 +1,6 @@
-import * as bcrypt from 'bcrypt';
+import {hash} from 'bcryptjs'
+
 
 export function generateHash(password: string): Promise<string> {
-  return bcrypt.hash(password, 10);
+  return hash(password, 10);
 }

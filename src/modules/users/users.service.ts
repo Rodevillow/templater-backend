@@ -4,7 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { InsertResult, Repository } from 'typeorm';
-import * as bcrypt from 'bcrypt';
+import {compare} from 'bcryptjs'
 import { generateHash } from '../../shared/functions/hashed-password';
 
 @Injectable()
@@ -19,6 +19,9 @@ export class UsersService {
         ...createUserDto,
         password: await generateHash(createUserDto.password),
       };
+
+      console.log('NEW USER: ', newUser);
+
       const user: InsertResult = await this.userRepository
         .createQueryBuilder()
         .insert()
@@ -57,7 +60,7 @@ export class UsersService {
     userId: string,
   ): Promise<User> {
     const user: User = await this.getById(userId);
-    const isRefreshTokenMatching = await bcrypt.compare(
+    const isRefreshTokenMatching = await compare(
       refreshToken,
       user.refreshToken,
     );

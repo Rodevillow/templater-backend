@@ -110,11 +110,15 @@ services:
     image: postgres:13-alpine
     ports:
       - 5432:5432
-    container_name: nest-docker-postgres
     env_file:
       - .env
     volumes:
       - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
     networks:
       - templater
 
@@ -126,7 +130,8 @@ services:
       - '3000:3000'
     container_name: nest-docker-app
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     volumes:
       - ./src:/app/src
     networks:

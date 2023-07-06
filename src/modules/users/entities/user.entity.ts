@@ -7,11 +7,11 @@ import { ApiProperty } from '@nestjs/swagger';
 @Unique(['email'])
 export class User extends AbstractEntity {
   @ApiProperty()
-  @Column({ type: 'varchar', length: 50, nullable: false })
+  @Column({ type: 'varchar', length: 50, nullable: true })
   firstName: string;
 
   @ApiProperty()
-  @Column({ type: 'varchar', length: 50, nullable: false })
+  @Column({ type: 'varchar', length: 50, nullable: true })
   lastName: string;
 
   @ApiProperty()

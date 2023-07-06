@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/entities/user.entity';
-import * as bcrypt from 'bcrypt';
+import {compare} from 'bcryptjs';
 import { UserResponse } from '../../shared/models/user.response';
 
 @Injectable()
@@ -70,7 +70,7 @@ export class AuthService {
   }
 
   private async verifyPassword(password: string, hashedPassword: string) {
-    const isPasswordMatching = await bcrypt.compare(password, hashedPassword);
+    const isPasswordMatching = await compare(password, hashedPassword);
     if (!isPasswordMatching) {
       throw new HttpException(
         'Wrong credentials provided',
